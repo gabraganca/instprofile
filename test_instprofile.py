@@ -111,3 +111,4 @@ def test_inst_profile():
     assert len(ip) == 2     # Number of lines
     assert len(ip[0]) == 2  # Number of columns
     assert np.allclose(ip[:,0], means)
+    assert np.all(ip[:,1]>0)
