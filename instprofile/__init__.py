@@ -114,7 +114,7 @@ def fit_gauss(x_vector, y_vector, guess):
     return a, mu, sigma
 
 
-def find_fit(x_vector, y_vector):
+def find_fit(x_vector, y_vector, delta):
     """
     Finds the peaks in the vector and fits gaussian for each peak
 
@@ -127,6 +127,11 @@ def find_fit(x_vector, y_vector):
     y_vector: list;
         A list with the ordinate.
 
+    delta: float;
+        The peak threshold. It is required at least a difference of `delta`
+        between a peak and its surrounding to declare it as a peak. Same goes
+        with valleys.
+
     Returns
     -------
 
@@ -135,12 +140,12 @@ def find_fit(x_vector, y_vector):
     and standard deviation from the gaussian fits.
 
     """
-    means_found, peaks_found = peakdet(y_vector, 0.05, x_vector)[0].T
+    means_found, peaks_found = peakdet(y_vector, delta, x_vector)[0].T
     # print means_found, peaks_found
 
 
     values_fit = np.array([fit_gauss(x_vector, y_vector,
-                                     [peaks_found[i], means_found[i], 1])
+                                     [peaks_found[i], means_found[i], 0.1])
                            for i in range(len(means_found))])
 
     # Get real peak
@@ -174,7 +179,7 @@ def fwhm(stdev):
     return 2*np.sqrt(2*np.log(2))*stdev
 
 
-def inst_profile(wave_vector, flux_vector):
+def inst_profile(wave_vector, flux_vector, delta):
     """
     Obtain the instrumental profile from a spectrum.
 
@@ -192,6 +197,11 @@ def inst_profile(wave_vector, flux_vector):
     flux_vector: list;
         Vector with the flux of the spectrum
 
+    delta: float;
+        The peak threshold. It is required at least a difference of `delta`
+        between a peak and its surrounding to declare it as a peak. Same goes
+        with valleys.
+
     Returns
     -------
 
@@ -199,7 +209,7 @@ def inst_profile(wave_vector, flux_vector):
     the wavelength of the emission line and the FWHM of the emissions lines detected.
     """
 
-    values = find_fit(wave_vector, flux_vector)
+    values = find_fit(wave_vector, flux_vector, delta)
 
     inst_profile  = np.zeros([len(values), 2], float)
 

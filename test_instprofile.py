@@ -59,7 +59,7 @@ def test_fit_gauss():
     gaussian = lambda x: peak*(1/np.sqrt(2*np.pi*(stdev**2)))*\
                                np.exp(-(mean-x)**2/(2*stdev**2))
 
-    x_vector = np.arange(0, 100.5, 0.5)
+    x_vector = np.arange(0, 100.5, 0.01)
     mean = 50
     peak = 1
     stdev = 0.1
@@ -83,7 +83,7 @@ def test_find_fit():
                gauss([peaks[1], means[1], stdevs[1]], x_vector)
 
 
-    values = find_fit(x_vector, y_vector)
+    values = find_fit(x_vector, y_vector, 0.05)
 
     assert np.allclose(peaks, values[:,0])
     assert np.allclose(means, values[:,1])
@@ -106,7 +106,7 @@ def test_inst_profile():
     y_vector = gauss([peaks[0], means[0], stdevs[0]], x_vector) + \
                gauss([peaks[1], means[1], stdevs[1]], x_vector)
 
-    ip = inst_profile(x_vector, y_vector)
+    ip = inst_profile(x_vector, y_vector, delta=0.05)
 
     assert len(ip) == 2     # Number of lines
     assert len(ip[0]) == 2  # Number of columns
