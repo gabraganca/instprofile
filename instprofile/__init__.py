@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from scipy.optimize import leastsq
 
+__version__ = "0.0.1"
 
 def peakdet(y_vector, delta, x_vector = None):
     """
