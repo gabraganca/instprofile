@@ -25,3 +25,30 @@ def test_one_gaussian():
         assert mean_found == mean
         assert peak_found == peak
 
+
+def test_two_gaussians():
+    """
+    Test the `peakdet` function with two gaussians.
+    """
+    gaussians = lambda x: peak_1*np.exp(-(mean_1-x)**2/(2*stdev_1**2)) + \
+                          peak_2*np.exp(-(mean_2-x)**2/(2*stdev_2**2))
+
+    x_vector = np.arange(0, 100.5, 0.5)
+
+    mean_1 = 25
+    mean_2 = 75
+
+    peak_1 = 1.5
+    peak_2 = 2
+
+    stdev_1 = 0.1
+    stdev_2 = 0.05
+
+    #generate some data
+    y_power = gaussians(x_vector)
+
+
+    values = peakdet(y_power, 0.5, x_vector)[0]
+
+    assert mean_1 == values[0, 0] and peak_1 == values[0, 1]
+    assert mean_2 == values[1, 0] and peak_2 == values[1, 1]
