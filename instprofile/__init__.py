@@ -172,3 +172,39 @@ def fwhm(stdev):
         stdev = np.array(stdev)
 
     return 2*np.sqrt(2*np.log(2))*stdev
+
+
+def inst_profile(wave_vector, flux_vector):
+    """
+    Obtain the instrumental profile from a spectrum.
+
+    The instrumental profile is defined as the full width at half maximum
+    (FWHM) of the emission lines from a spectrum of a lamp. The algorithm finds
+    the emission lines, fits a gaussian for each of them and return the FWHM of
+    each emission line.
+
+    Parameters
+    ----------
+
+    wave_vector: list;
+        Vector with the values of the wavelengths.
+
+    flux_vector: list;
+        Vector with the flux of the spectrum
+
+    Returns
+    -------
+
+    A numpy.ndarray with the two columns, in wich each one of them are, respectively,
+    the wavelength of the emission line and the FWHM of the emissions lines detected.
+    """
+
+    values = find_fit(wave_vector, flux_vector)
+
+    inst_profile  = np.zeros([len(values), 2], float)
+
+
+    inst_profile[:,0] = values[:,1] # Abscissa
+    inst_profile[:,1] = fwhm(values[:,2]) # Instrumental profile
+
+    return inst_profile

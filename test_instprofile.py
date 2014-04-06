@@ -94,3 +94,20 @@ def test_fwhm():
     assert isinstance(fwhm(1), float)
     assert isinstance(fwhm([1,1]), np.ndarray)
     assert len(fwhm([1,1])) == 2
+
+def test_inst_profile():
+    gauss = lambda p, x: p[0]*np.exp(-(p[1]-x)**2/(2*p[2]**2)) #1d Gaussian func
+
+    x_vector = np.arange(0, 100, 0.1)
+    peaks = [0.5, 1]
+    means = [25.0, 75.0]
+    stdevs = [0.5, 1.5]
+
+    y_vector = gauss([peaks[0], means[0], stdevs[0]], x_vector) + \
+               gauss([peaks[1], means[1], stdevs[1]], x_vector)
+
+    ip = inst_profile(x_vector, y_vector)
+
+    assert len(ip) == 2     # Number of lines
+    assert len(ip[0]) == 2  # Number of columns
+    assert np.allclose(ip[:,0], means)
