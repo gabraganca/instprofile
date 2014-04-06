@@ -68,3 +68,23 @@ def test_fit_gauss():
 
     assert np.allclose(fit_gauss(x_vector, y_power, [peak, mean, stdev]),
                        [peak, mean, stdev])
+
+def test_find_fit():
+    # We have a spectrum wih two gaussians and we need to detect it and fit each one of them.
+
+    gauss = lambda p, x: p[0]*np.exp(-(p[1]-x)**2/(2*p[2]**2)) #1d Gaussian func
+
+    x_vector = np.arange(0, 100, 0.1)
+    peaks = [0.5, 1]
+    means = [25, 75]
+    stdevs = [2, 1.5]
+
+    y_vector = gauss([peaks[0], means[0], stdevs[0]], x_vector) + \
+               gauss([peaks[1], means[1], stdevs[1]], x_vector)
+
+
+    values = find_fit(x_vector, y_vector)
+
+    assert np.allclose(peaks, values[:,0])
+    assert np.allclose(means, values[:,1])
+    assert np.allclose(stdevs, values[:,2])

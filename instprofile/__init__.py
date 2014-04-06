@@ -112,3 +112,39 @@ def fit_gauss(x_vector, y_vector, guess):
     a , mu, sigma = out[0]
 
     return a, mu, sigma
+
+
+def find_fit(x_vector, y_vector):
+    """
+    Finds the peaks in the vector and fits gaussian for each peak
+
+    Parameters
+    ----------
+
+    x_vector: list;
+        A list with the abscissa
+
+    y_vector: list;
+        A list with the ordinate.
+
+    Returns
+    -------
+
+    A numpy array with three columns and the number the lines corresponds
+    to each peak fitted. The thre columns are respectrively, the peak, mean
+    and standard deviation from the gaussian fits.
+
+    """
+    means_found, peaks_found = peakdet(y_vector, 0.05, x_vector)[0].T
+    # print means_found, peaks_found
+
+
+    values_fit = np.array([fit_gauss(x_vector, y_vector,
+                                     [peaks_found[i], means_found[i], 1])
+                           for i in range(len(means_found))])
+
+    # Get real peak
+
+    values_fit[:, 0] = values_fit[:,0]*(1/np.sqrt(2*np.pi*(values_fit[:,2]**2)))
+
+    return values_fit
