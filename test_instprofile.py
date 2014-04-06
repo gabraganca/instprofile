@@ -1,5 +1,6 @@
 import numpy as np
-from instprofile import peakdet
+from instprofile import *
+
 
 def test_one_gaussian():
     """
@@ -52,3 +53,18 @@ def test_two_gaussians():
 
     assert mean_1 == values[0, 0] and peak_1 == values[0, 1]
     assert mean_2 == values[1, 0] and peak_2 == values[1, 1]
+
+
+def test_fit_gauss():
+    gaussian = lambda x: peak*(1/np.sqrt(2*np.pi*(stdev**2)))*\
+                               np.exp(-(mean-x)**2/(2*stdev**2))
+
+    x_vector = np.arange(0, 100.5, 0.5)
+    mean = 50
+    peak = 1
+    stdev = 0.1
+
+    y_power = gaussian(x_vector)
+
+    assert np.allclose(fit_gauss(x_vector, y_power, [peak, mean, stdev]),
+                       [peak, mean, stdev])

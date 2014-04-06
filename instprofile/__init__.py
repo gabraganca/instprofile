@@ -1,5 +1,7 @@
 import sys
 import numpy as np
+from scipy.optimize import leastsq
+
 
 def peakdet(y_vector, delta, x_vector = None):
     """
@@ -78,3 +80,35 @@ def peakdet(y_vector, delta, x_vector = None):
                 lookformax = True
 
     return np.array(maxtab), np.array(mintab)
+
+
+def fit_gauss(x_vector, y_vector, guess):
+    """
+    Fit a gaussian to the data. It is very sensible to the guessed value of
+    the mean.
+
+    Parameters
+    ----------
+
+    x_vector: list;
+        Vector with the abscissa.
+
+    y_vector: list;
+        Vector with the ordinate.
+
+    guess: list;
+        List with guessed values. The values are [peak, mean, standard_deviation].
+    """
+
+    gauss_fit = lambda p, x: p[0]*(1/np.sqrt(2*np.pi*(p[2]**2)))*\
+                             np.exp(-(x-p[1])**2/(2*p[2]**2)) #1d Gaussian func
+    e_gauss_fit = lambda p, x, y: (gauss_fit(p, x) - y) #1d Gaussian fit
+
+    out = leastsq(e_gauss_fit, guess, args=(x_vector, y_vector), maxfev=100000,
+                  full_output=1) #Gauss Fit
+
+
+    # normalization factor p[0], mean p[1], standard deviation p[2].
+    a , mu, sigma = out[0]
+
+    return a, mu, sigma
