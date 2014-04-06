@@ -148,3 +148,27 @@ def find_fit(x_vector, y_vector):
     values_fit[:, 0] = values_fit[:,0]*(1/np.sqrt(2*np.pi*(values_fit[:,2]**2)))
 
     return values_fit
+
+
+def fwhm(stdev):
+    """
+    Obtain the full width at half maximum from a Gaussian obtained from the standard deviation.
+
+    Equation obtained from http://en.wikipedia.org/wiki/Full_width_at_half_maximum.
+
+    Parameters
+    ----------
+
+    stdev: float, list;
+        Standard deviation.
+
+    Returns
+    -------
+
+    The full width at half maximum value.
+    """
+
+    if isinstance(stdev, list):
+        stdev = np.array(stdev)
+
+    return 2*np.sqrt(2*np.log(2))*stdev

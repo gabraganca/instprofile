@@ -88,3 +88,9 @@ def test_find_fit():
     assert np.allclose(peaks, values[:,0])
     assert np.allclose(means, values[:,1])
     assert np.allclose(stdevs, values[:,2])
+
+
+def test_fwhm():
+    assert isinstance(fwhm(1), float)
+    assert isinstance(fwhm([1,1]), np.ndarray)
+    assert len(fwhm([1,1])) == 2
