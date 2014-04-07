@@ -180,7 +180,7 @@ def fwhm(stdev):
     return 2*np.sqrt(2*np.log(2))*stdev
 
 
-def inst_profile(wave_vector, flux_vector, delta):
+def inst_profile(wave_vector, flux_vector, delta, upper_lim=None):
     """
     Obtain the instrumental profile from a spectrum.
 
@@ -203,6 +203,10 @@ def inst_profile(wave_vector, flux_vector, delta):
         between a peak and its surrounding to declare it as a peak. Same goes
         with valleys.
 
+    upper_lim: float (Optional);
+        Sometimes the fit is not perfect and very high values for FWHM are
+        found. This make a upper cut on the values.
+
     Returns
     -------
 
@@ -221,5 +225,10 @@ def inst_profile(wave_vector, flux_vector, delta):
     cond_neg = inst_profile[:,1] > 0 # Reject negative values
 
     inst_profile = inst_profile[cond_neg]
+
+    if isinstance(upper_lim, (int, float)):
+        cond = inst_profile[:,1] < upper_lim
+        inst_profile = inst_profile[cond]
+
 
     return inst_profile
