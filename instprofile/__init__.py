@@ -241,7 +241,9 @@ def inst_profile(wave_vector, flux_vector, delta, upper_lim=None):
     inst_profile[:,0] = values[:,1] # Abscissa
     inst_profile[:,1] = fwhm(values[:,2]) # Instrumental profile
 
-    cond_neg = inst_profile[:,1] > 0 # Reject negative values
+
+    # Reject negative values, i.e., bad fits
+    cond_neg = (inst_profile[:,0] > 0) & (inst_profile[:,1] > 0)
 
     inst_profile = inst_profile[cond_neg]
 
